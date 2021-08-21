@@ -9,12 +9,12 @@ using WSventa.Models;
 using WSventa.Models.Request;
 using WSventa.Models.Response;
 using WSventa.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace WSventa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class VentaController : ControllerBase
     {
         private IVentaService _venta;
@@ -42,5 +42,34 @@ namespace WSventa.Controllers
             return Ok(respuesta);
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            Respuesta oRespuesta = new Respuesta();
+            oRespuesta.Exito = 0;
+            try
+            {
+                using (VentaRealContext db = new VentaRealContext())
+                {
+                    //var lst = db.Venta.OrderByDescending(d => d.Id).ToList();
+                    //var lst = db.Conceptos.OrderByDescending(d => d.Id).ToList();
+
+                    //var lst = db.Conceptos.Find((long)Id);
+
+                    //var lst = db.Conceptos.Where(c => c.IdVenta == Id).ToList();
+
+                    var lst = db.Venta.Include(c => c.Conceptos).OrderByDescending(v => v.Id).ToList();
+
+                    oRespuesta.Exito = 1;
+                    oRespuesta.Data = lst;
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                oRespuesta.Mensaje = e.Message;
+            }
+            return Ok(oRespuesta);
+        }
     }
 }

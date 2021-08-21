@@ -50,12 +50,17 @@ namespace WSventa
                 })*/
                 ;
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options => 
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             //json web token
             var appSettings = appSettingsSection.Get<AppSettings>();
             var llave = Encoding.ASCII.GetBytes(appSettings.Secreto);
+
             services.AddAuthentication(d =>
             {
                 d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -82,6 +87,7 @@ namespace WSventa
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IVentaService, VentaService>();
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

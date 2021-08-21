@@ -14,7 +14,6 @@ namespace WSventa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ClienteController : ControllerBase
     {
         [HttpGet]
@@ -44,6 +43,8 @@ namespace WSventa.Controllers
                 using(VentaRealContext db = new VentaRealContext())
                 {
                     Cliente oCliente = new Cliente();
+
+                    oCliente.Id = oModel.Id;
                     oCliente.Nombre = oModel.Nombre;
                     oCliente.Cedula = oModel.Cedula;
                     oCliente.Edad = oModel.Edad;
@@ -102,6 +103,28 @@ namespace WSventa.Controllers
                     db.Remove(oCliente);
                     db.SaveChanges();
                     oRespuesta.Exito = 1;
+                }
+            }
+            catch (Exception e)
+            {
+                oRespuesta.Mensaje = e.Message;
+            }
+
+            return Ok(oRespuesta);
+        }
+
+        [HttpGet("{Id}")]
+        public IActionResult GetById(int Id)
+        {
+            Respuesta oRespuesta = new Respuesta();
+            try
+            {
+                using (VentaRealContext db = new VentaRealContext())
+                {
+                    var oCliente = db.Clientes.Find(Id);
+
+                    oRespuesta.Exito = 1;
+                    oRespuesta.Data = oCliente;
                 }
             }
             catch (Exception e)

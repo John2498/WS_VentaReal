@@ -14,7 +14,6 @@ namespace WSventa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ProductoController : ControllerBase
     {
         [HttpGet]
@@ -42,12 +41,14 @@ namespace WSventa.Controllers
         public IActionResult Add(ProductoRequest oModel)
         {
             Respuesta oRespuesta = new Respuesta();
+
             try
             {
                 using (VentaRealContext db = new VentaRealContext())
                 {
                     Producto oProducto = new Producto();
 
+                    oProducto.Id = oModel.Id;
                     oProducto.Nombre = oModel.Nombre;
                     oProducto.PrecioUnitario = oModel.PrecioUnitario;
                     oProducto.Costo = oModel.Costo;
@@ -125,7 +126,7 @@ namespace WSventa.Controllers
                 using (VentaRealContext db = new VentaRealContext())
                 {
                     var oProdcuto = db.Productos.Find(Id);
-                    
+
                     oRespuesta.Exito = 1;
                     oRespuesta.Data = oProdcuto;
                 }
@@ -137,5 +138,7 @@ namespace WSventa.Controllers
 
             return Ok(oRespuesta);
         }
+
+
     }
 }

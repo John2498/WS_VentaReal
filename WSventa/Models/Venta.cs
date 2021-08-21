@@ -10,6 +10,7 @@ namespace WSventa.Models
         public Venta()
         {
             Conceptos = new HashSet<Concepto>();
+            Conceptos = new List<Concepto>();
         }
 
         public long Id { get; set; }
